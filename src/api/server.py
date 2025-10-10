@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import service
 
 
 app = FastAPI()
@@ -17,11 +19,34 @@ app.add_middleware(
 )
 
 
-@app.get("/")
+# @=== Pydantic Model ===@
+class PredictResponse(BaseModel):
+    winRate: float
+    drawRate: float
+    loseRate: float
+
+
+class PredictRequest(BaseModel):
+    xg: float
+    xga: float
+    ref_name: str
+
+
+unpack_dict = lambda d, key: round(list(d.get(key).values())[0], 2)
+
+
+@app.get("/ref")
 async def root():
-    return {"message": "Hello World"}
+    return service.getRef()
 
 
 @app.post("/predict")
-async def predict():
-    return {"winRate": 90, "drawRate": 5, "loseRate": 5}
+async def predict(req: PredictRequest):
+    pred = service.predict(req.xg, req.xga, req.ref_name)
+    prob = {
+        "winRate": unpack_dict(pred, "W"),
+        "drawRate": unpack_dict(pred, "D"),
+        "loseRate": unpack_dict(pred, "L"),
+    }
+
+    return prob
