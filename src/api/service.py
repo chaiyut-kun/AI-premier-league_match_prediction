@@ -28,9 +28,9 @@ def matchRef(ref_name) -> int:
     return code
 
 
-def getRef() -> list[dict]:
+def getRef(ref=ref_code) -> list[dict]:
 
-    return ref_code["referee"].to_dict()
+    return ref["referee"].to_dict()
 
 
 print(getRef())
