@@ -18,5 +18,8 @@ pip install -r requirement.txt
 fastapi dev <your server file>
 ```
 
+# Trip
+- [path] teams จะมีการคืนค่า team ทั้งหมดคืนไป ซึ่งจะเป็นชื่อทีมที่สามารถนำไป map เพื่อหาค่า xg score ได้
+
 # Developed By 
 Chaiyut Tavon naja

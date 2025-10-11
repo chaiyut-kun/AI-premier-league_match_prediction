@@ -27,8 +27,16 @@ class PredictResponse(BaseModel):
 
 
 class PredictRequest(BaseModel):
-    xg: float
-    xga: float
+    home: str
+    away: str
+    ref_name: str
+
+
+class Team(BaseModel):
+    team_name: str
+
+
+class Ref(BaseModel):
     ref_name: str
 
 
@@ -36,13 +44,16 @@ unpack_dict = lambda d, key: round(list(d.get(key).values())[0], 2)
 
 
 @app.get("/ref")
-async def root():
+async def get_ref():
     return service.getRef()
 
 
 @app.post("/predict")
-async def predict(req: PredictRequest):
-    pred = service.predict(req.xg, req.xga, req.ref_name)
+async def predict(item: PredictRequest):
+    home_xg = service.get_xg(item.home)
+    away_xg = service.get_xg(item.away)
+    pred = service.predict(home_xg, away_xg, item.ref_name)
+
     prob = {
         "winRate": unpack_dict(pred, "W"),
         "drawRate": unpack_dict(pred, "D"),
@@ -50,3 +61,14 @@ async def predict(req: PredictRequest):
     }
 
     return prob
+
+
+@app.get("/teams")
+async def get_teams():
+    teams = service.get_teams()
+    return teams
+
+
+# @app.get("/teams/xg/{name}")
+# async def team_xg(name: str):
+#     return service.get_xg(name)
