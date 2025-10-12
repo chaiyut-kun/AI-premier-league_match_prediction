@@ -55,9 +55,9 @@ async def predict(item: PredictRequest):
     pred = service.predict(home_xg, away_xg, item.ref_name)
 
     prob = {
-        "winRate": unpack_dict(pred, "W"),
-        "drawRate": unpack_dict(pred, "D"),
-        "loseRate": unpack_dict(pred, "L"),
+        "winRate": unpack_dict(pred, "W") * 100,
+        "drawRate": unpack_dict(pred, "D") * 100,
+        "loseRate": unpack_dict(pred, "L") * 100,
     }
 
     return prob
@@ -69,6 +69,6 @@ async def get_teams():
     return teams
 
 
-# @app.get("/teams/xg/{name}")
-# async def team_xg(name: str):
-#     return service.get_xg(name)
+@app.get("/teams/xg/{name}")
+async def team_xg(name: str):
+    return service.get_xg(name)

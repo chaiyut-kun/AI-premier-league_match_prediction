@@ -1,11 +1,11 @@
 import pickle
 import pandas as pd
 
-f = open("../model/decisiontree.pkl", "rb")
+f = open("./decisiontree.pkl", "rb")
 model = pickle.load(f)
 f.close()
-ref_code = pd.read_csv("../model/referee_encoding.csv")
-teams = pd.read_csv("../model/xG7.csv")
+ref_code = pd.read_csv("./referee_encoding.csv")
+teams = pd.read_csv("./xG7.csv")
 label = ["xg", "xga", "ref_encode"]
 
 
@@ -26,13 +26,12 @@ def matchRef(ref_name) -> int:
     this function will match name ref with code in referee_encoding.csv to get code for prediction
     """
     code = ref_code[ref_code["referee"] == ref_name]["code"].values[0]
-    print(code)
     return code
 
 
 def getRef(ref=ref_code) -> list[dict]:
 
-    return ref["referee"].to_dict()
+    return ref["referee"].iloc[30:].to_dict()
 
 
 def get_teams():
@@ -48,4 +47,17 @@ def get_xg(team_name: str) -> float:
     return xg.values[0]
 
 
-print(matchRef("Michael Oliver"))
+def get_xga(team_name: str) -> float:
+    """
+    this function will get team name then map with (xG7.csv file) to get xga score from team name
+    """
+    xg = teams[teams["team"] == team_name]["xga"]
+    print(xg.values[0])
+    return xg.values[0]
+
+
+liv = get_xg("Liverpool")
+man = get_xga("Manchester Utd")
+
+print(predict(liv, man, "Michael Oliver"))
+print(getRef())
