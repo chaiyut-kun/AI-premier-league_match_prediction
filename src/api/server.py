@@ -50,13 +50,16 @@ async def get_ref():
 
 @app.post("/predict")
 async def predict(item: PredictRequest):
+
     home_xg = service.get_xg(item.home)
     away_xg = service.get_xg(item.away)
-    pred = service.predict(home_xg, away_xg, item.ref_name)
+    # home_xga = service.get_xga(item.home)
+    away_xga = service.get_xga(item.away)
+
+    pred = service.predict(home_xg, away_xga, item.ref_name)
 
     prob = {
         "winRate": unpack_dict(pred, "W") * 100,
-        "drawRate": unpack_dict(pred, "D") * 100,
         "loseRate": unpack_dict(pred, "L") * 100,
     }
 

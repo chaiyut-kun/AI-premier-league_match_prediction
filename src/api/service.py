@@ -26,12 +26,13 @@ def matchRef(ref_name) -> int:
     this function will match name ref with code in referee_encoding.csv to get code for prediction
     """
     code = ref_code[ref_code["referee"] == ref_name]["code"].values[0]
+    print(code)
     return code
 
 
 def getRef(ref=ref_code) -> list[dict]:
 
-    return ref["referee"].iloc[30:].to_dict()
+    return ref["referee"].iloc[:].to_dict()
 
 
 def get_teams():
@@ -59,5 +60,5 @@ def get_xga(team_name: str) -> float:
 liv = get_xg("Liverpool")
 man = get_xga("Manchester Utd")
 
-print(predict(liv, man, "Michael Oliver"))
-print(getRef())
+# print(predict(liv, man))
+# print(getRef())
