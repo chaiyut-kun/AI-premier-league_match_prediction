@@ -17,6 +17,8 @@ pip install -r requirement.txt
 ```python
 fastapi dev <your server file>
 ```
+# UI web
+https://github.com/chaiyut-kun/UI-AI-program
 
 # Trip
 - [path] teams จะมีการคืนค่า team ทั้งหมดคืนไป ซึ่งจะเป็นชื่อทีมที่สามารถนำไป map เพื่อหาค่า xg score ได้
