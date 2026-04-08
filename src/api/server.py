@@ -30,6 +30,7 @@ class PredictRequest(BaseModel):
     home: str
     away: str
     ref_name: str
+    attendance: int
 
 
 class Team(BaseModel):
@@ -51,12 +52,17 @@ async def get_ref():
 @app.post("/predict")
 async def predict(item: PredictRequest):
 
-    home_xg = service.get_xg(item.home)
-    away_xg = service.get_xg(item.away)
-    # home_xga = service.get_xga(item.home)
-    away_xga = service.get_xga(item.away)
+    # print("Input is in")
 
-    pred = service.predict(home_xg, away_xga, item.ref_name)
+    home_xg = service.get_xg(item.home)
+    away_xga = service.get_xga(item.away)
+    # away_xg = service.get_xg(item.away)
+    # home_xga = service.get_xga(item.home)
+
+    pred = service.predict(home_xg, away_xga, item.ref_name, item.attendance)
+
+    
+    # print("Input is in")
 
     prob = {
         "winRate": unpack_dict(pred, "W") * 100,

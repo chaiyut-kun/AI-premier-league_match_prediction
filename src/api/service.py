@@ -6,18 +6,20 @@ model = pickle.load(f)
 f.close()
 ref_code = pd.read_csv("./referee_encoding.csv")
 teams = pd.read_csv("./xG7.csv")
-label = ["xg", "xga", "ref_encode"]
+label = ["xg", "xga", "ref_encode", "attendance"]
 
-
-def predict(xg: float, xga: float, ref_name: str):
+def predict(xg: float, xga: float, ref_name: str, attendance: int):
     # ค้นหารายชื่อกรรมการแล้วนำไป map เป็นตัวเลขตามไฟล์ ref csv
     ref_code = matchRef(ref_name)
-    df = pd.DataFrame([[xg, xga, ref_code]], columns=label)
+    df = pd.DataFrame([[xg, xga, ref_code, attendance]], columns=label)
 
     # หาค่าความเป็นไปได้ทั้งหมด
     prob = model.predict_proba(df)
     columns = model.classes_
+    
     probs_df = pd.DataFrame(prob, columns=columns)
+    
+    print("prob",probs_df)
     return probs_df.to_dict()
 
 
@@ -26,7 +28,7 @@ def matchRef(ref_name) -> int:
     this function will match name ref with code in referee_encoding.csv to get code for prediction
     """
     code = ref_code[ref_code["referee"] == ref_name]["code"].values[0]
-    print(code)
+    # print("ref",code)
     return code
 
 
@@ -44,7 +46,7 @@ def get_xg(team_name: str) -> float:
     this function will get team name then map with (xG7.csv file) to get xg score from team name
     """
     xg = teams[teams["team"] == team_name]["xg"]
-    print(xg.values[0])
+    # print(xg.values[0])
     return xg.values[0]
 
 
@@ -53,12 +55,9 @@ def get_xga(team_name: str) -> float:
     this function will get team name then map with (xG7.csv file) to get xga score from team name
     """
     xg = teams[teams["team"] == team_name]["xga"]
-    print(xg.values[0])
+    # print(xg.values[0])
     return xg.values[0]
 
-
-liv = get_xg("Liverpool")
-man = get_xga("Manchester Utd")
 
 # print(predict(liv, man))
 # print(getRef())
